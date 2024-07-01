@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
   res.send("home page of the chat app");
 });
 
-app.get("/api/chats", (req, res) => {
+app.get("/api/chat", (req, res) => {
   res.send(chats);
 });
 
