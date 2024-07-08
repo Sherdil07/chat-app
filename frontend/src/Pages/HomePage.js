@@ -19,7 +19,9 @@ function Homepage() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
 
-    if (user) navigate.push("/chats");
+    if (user) {
+      navigate("/chats"); // Use navigate directly to navigate to "/chats"
+    }
   }, [navigate]);
 
   return (

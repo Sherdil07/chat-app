@@ -13,18 +13,18 @@ const Signup = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [confirmpassword, setConfirmpassword] = useState();
-  const [password, setPassword] = useState();
-  const [pic, setPic] = useState();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [confirmpassword, setConfirmpassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [pic, setPic] = useState("");
   const [picLoading, setPicLoading] = useState(false);
 
   const submitHandler = async () => {
     setPicLoading(true);
     if (!name || !email || !password || !confirmpassword) {
       toast({
-        title: "Please Fill all the Feilds",
+        title: "Please Fill all the Fields",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -41,9 +41,10 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setPicLoading(false);
       return;
     }
-    console.log(name, email, password, pic);
+
     try {
       const config = {
         headers: {
@@ -60,7 +61,9 @@ const Signup = () => {
         },
         config
       );
-      console.log(data);
+
+      console.log(data); // Log the response data to see what's returned
+
       toast({
         title: "Registration Successful",
         status: "success",
@@ -68,13 +71,18 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       setPicLoading(false);
-      navigate.push("/chats");
+      navigate("/chats");
     } catch (error) {
+      console.error("Signup Error:", error); // Log the entire error object for debugging
+
+      const errorMessage = error.response?.data?.message || "Unknown error occurred";
+
       toast({
-        title: "Error Occured!",
-        description: error.response.data.message,
+        title: "Error Occurred!",
+        description: errorMessage,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -86,7 +94,7 @@ const Signup = () => {
 
   const postDetails = (pics) => {
     setPicLoading(true);
-    if (pics === undefined) {
+    if (!pics) {
       toast({
         title: "Please Select an Image!",
         status: "warning",
@@ -94,9 +102,10 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setPicLoading(false);
       return;
     }
-    console.log(pics);
+
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
@@ -125,7 +134,6 @@ const Signup = () => {
         position: "bottom",
       });
       setPicLoading(false);
-      return;
     }
   };
 
@@ -161,12 +169,12 @@ const Signup = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <FormControl id="password" isRequired>
+      <FormControl id="confirm-password" isRequired>
         <FormLabel>Confirm Password</FormLabel>
         <InputGroup size="md">
           <Input
             type={show ? "text" : "password"}
-            placeholder="Confirm password"
+            placeholder="Confirm Password"
             onChange={(e) => setConfirmpassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
@@ -177,7 +185,7 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
       <FormControl id="pic">
-        <FormLabel>Upload your Picture</FormLabel>
+        <FormLabel>Upload Your Picture</FormLabel>
         <Input
           type="file"
           p={1.5}
